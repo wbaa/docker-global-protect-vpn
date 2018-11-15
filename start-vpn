@@ -1,0 +1,21 @@
+#!/bin/sh
+
+die () {
+    local _exitcode=$1
+    shift
+    printf "%s" "$*" 1>&2
+    exit ${_exitcode}
+}
+
+# Mandatory environment variables.
+[ -n "${GLOBALPROTECT_PORTAL}" ] || die 1 'Missing environment variable: $GLOBALPROTECT_PORTAL'
+[ -n "${REMOTEDESKTOP_HOST}"   ] || die 2 'Missing environment variable: $REMOTEDESKTOP_HOST'
+
+echo "GLOBALPROTECT_PORTAL: ${GLOBALPROTECT_PORTAL}"
+echo "REMOTEDESKTOP_HOST: ${REMOTEDESKTOP_HOST}"
+
+exec openconnect \
+    --protocol=gp \
+    --script-tun \
+    --script "ocproxy -g -D 1080 -L '3389:${REMOTEDESKTOP_HOST}:3389'" \
+    "${GLOBALPROTECT_PORTAL}"

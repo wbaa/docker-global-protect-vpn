@@ -1,0 +1,6 @@
+# IntelliJ Project files.
+.idea/
+*.iml
+
+# Git Repo.
+.git
